@@ -16,6 +16,7 @@ import 'package:omi/backend/schema/person.dart';
 import 'package:omi/models/custom_stt_config.dart';
 import 'package:omi/models/stt_provider.dart';
 import 'package:omi/utils/logger.dart';
+import 'package:omi/services/capture/button_actions.dart';
 
 class SharedPreferencesUtil {
   static final SharedPreferencesUtil _instance = SharedPreferencesUtil._internal();
@@ -337,15 +338,38 @@ class SharedPreferencesUtil {
 
   set batchModeSuspendedForOnboarding(bool value) => saveBool('batchModeSuspendedForOnboarding', value);
 
-  // Double tap behavior: 0 = end conversation (default), 1 = pause/mute, 2 = star ongoing conversation
-  int get doubleTapAction => getInt('doubleTapAction');
+  // Button actions:
+  // Single tap defaults to ask question.
+  ButtonAction get singleTapAction =>
+      ButtonAction.fromId(getInt('singleTapAction', defaultValue: 3));
 
-  set doubleTapAction(int value) => saveInt('doubleTapAction', value);
+  set singleTapAction(ButtonAction value) =>
+      saveInt('singleTapAction', value.id);
 
-  // Keep backward compatibility
-  bool get doubleTapPausesMuting => doubleTapAction == 1;
+  // Double tap keeps the existing preference IDs for backward compatibility:
+  // 0 = end conversation, 1 = pause/mute, 2 = star ongoing conversation.
+  ButtonAction get doubleTapAction => ButtonAction.fromId(
+        getInt('doubleTapAction', defaultValue: 1),
+      );
 
-  set doubleTapPausesMuting(bool value) => doubleTapAction = value ? 1 : 0;
+  set doubleTapAction(ButtonAction value) =>
+      saveInt('doubleTapAction', value.id);
+
+  // Triple tap defaults to end conversation.
+  ButtonAction get tripleTapAction =>
+      ButtonAction.fromId(getInt('tripleTapAction', defaultValue: 0));
+
+  set tripleTapAction(ButtonAction value) =>
+      saveInt('tripleTapAction', value.id);
+
+  // Keep backward compatibility with existing callers.
+  bool get doubleTapPausesMuting =>
+      doubleTapAction == ButtonAction.muteUnmute;
+
+  set doubleTapPausesMuting(bool value) =>
+      doubleTapAction = value
+          ? ButtonAction.muteUnmute
+          : ButtonAction.endConversation;
 
   // Custom STT configuration
   CustomSttConfig get customSttConfig {

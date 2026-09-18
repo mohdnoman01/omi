@@ -23,6 +23,7 @@ import 'package:omi/utils/l10n_extensions.dart';
 import 'package:omi/utils/logger.dart';
 import 'package:omi/utils/other/temp.dart';
 import 'package:omi/widgets/dialog.dart';
+import 'package:omi/services/capture/button_actions.dart';
 
 class DeviceSettings extends StatefulWidget {
   const DeviceSettings({super.key});
@@ -377,86 +378,110 @@ class _DeviceSettingsState extends State<DeviceSettings> {
     );
   }
 
-  String _getDoubleTapActionLabel(int action) {
+  String _getButtonActionLabel(ButtonAction action) {
     switch (action) {
-      case 0:
-        return context.l10n.endConversation;
-      case 1:
+      case ButtonAction.askQuestion:
+        return context.l10n.deviceOnboardingAskQuestionTitle;
+      case ButtonAction.muteUnmute:
         return context.l10n.deviceOnboardingMuteUnmute;
-      case 2:
-        return context.l10n.starConversation;
-      default:
+      case ButtonAction.endConversation:
         return context.l10n.endConversation;
+      case ButtonAction.starConversation:
+        return context.l10n.starConversation;
     }
   }
 
-  void _showDoubleTapActionSheet() {
-    int currentAction = SharedPreferencesUtil().doubleTapAction;
+  void _showButtonActionSheet({
+    required String title,
+    required ButtonAction currentAction,
+    required ValueChanged<ButtonAction> onSelected,
+  }) {
+    const actions = ButtonAction.values;
 
     showModalBottomSheet(
       context: context,
       backgroundColor: const Color(0xFF1C1C1E),
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
       builder: (sheetContext) {
-        return StatefulBuilder(
-          builder: (context, setSheetState) {
-            return SafeArea(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 12, bottom: 16),
-                    width: 36,
-                    height: 4,
-                    decoration: BoxDecoration(color: const Color(0xFF3C3C43), borderRadius: BorderRadius.circular(2)),
-                  ),
-                  Text(
-                    context.l10n.doubleTapAction,
-                    style: const TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 16),
-                  ListTile(
-                    title: Text(
-                      context.l10n.endAndProcess,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
-                    ),
-                    trailing: currentAction == 0 ? const Icon(Icons.check, color: Colors.white, size: 20) : null,
-                    onTap: () {
-                      setState(() => SharedPreferencesUtil().doubleTapAction = 0);
-                      Navigator.pop(sheetContext);
-                    },
-                  ),
-                  ListTile(
-                    title: Text(
-                      context.l10n.deviceOnboardingMuteUnmute,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
-                    ),
-                    trailing: currentAction == 1 ? const Icon(Icons.check, color: Colors.white, size: 20) : null,
-                    onTap: () {
-                      setState(() => SharedPreferencesUtil().doubleTapAction = 1);
-                      Navigator.pop(sheetContext);
-                    },
-                  ),
-                  ListTile(
-                    title: Text(
-                      context.l10n.starOngoing,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
-                    ),
-                    trailing: currentAction == 2 ? const Icon(Icons.check, color: Colors.white, size: 20) : null,
-                    onTap: () {
-                      setState(() => SharedPreferencesUtil().doubleTapAction = 2);
-                      Navigator.pop(sheetContext);
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                ],
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 12, bottom: 16),
+                width: 36,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: const Color(0xFF3C3C43),
+                  borderRadius: BorderRadius.circular(2),
               ),
-            );
-          },
-        );
-      },
-    );
-  }
+            ),
+            Text(
+              title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 16),
+            ...actions.map(
+              (action) => ListTile(
+                title: Text(
+                  _getButtonActionLabel(action),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                trailing: currentAction == action
+                    ? const Icon(Icons.check, color: Colors.white, size: 20)
+                    : null,
+                onTap: () {
+                  setState(() => onSelected(action));
+                  Navigator.pop(sheetContext);
+                },
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      );
+    },
+  );
+}
+
+void _showSingleTapActionSheet() {
+  _showButtonActionSheet(
+    title: context.l10n.singleTapAction,
+    currentAction: SharedPreferencesUtil().singleTapAction,
+    onSelected: (action) {
+      SharedPreferencesUtil().singleTapAction = action;
+    },
+  );
+}
+
+void _showDoubleTapActionSheet() {
+  _showButtonActionSheet(
+    title: context.l10n.doubleTapAction,
+    currentAction: SharedPreferencesUtil().doubleTapAction,
+    onSelected: (action) {
+      SharedPreferencesUtil().doubleTapAction = action;
+    },
+  );
+}
+
+void _showTripleTapActionSheet() {
+  _showButtonActionSheet(
+    title: context.l10n.tripleTapAction,
+    currentAction: SharedPreferencesUtil().tripleTapAction,
+    onSelected: (action) {
+      SharedPreferencesUtil().tripleTapAction = action;
+    },
+  );
+}
 
   void _showBrightnessSheet() {
     showModalBottomSheet(
@@ -733,7 +758,9 @@ class _DeviceSettingsState extends State<DeviceSettings> {
   }
 
   Widget _buildCustomizationSection(BtDevice? device, DeviceProvider provider) {
+    final singleTapAction = SharedPreferencesUtil().singleTapAction;
     final doubleTapAction = SharedPreferencesUtil().doubleTapAction;
+    final tripleTapAction = SharedPreferencesUtil().tripleTapAction;
     final supportsFind = device?.type == DeviceType.omi && !FirmwareUpdateBuildPolicy.current.isOpenGlassDevice(device);
 
     return Container(
@@ -757,12 +784,26 @@ class _DeviceSettingsState extends State<DeviceSettings> {
             ),
             const Divider(height: 1, color: Color(0xFF3C3C43)),
           ],
+          // Single Tap
+          _buildProfileStyleItem(
+            icon: FontAwesomeIcons.handPointer,
+            title: context.l10n.singleTap,
+            chipValue: _getButtonActionLabel(singleTapAction),
+            onTap: _showSingleTapActionSheet,
+          ),
           // Double Tap
           _buildProfileStyleItem(
             icon: FontAwesomeIcons.handPointer,
             title: context.l10n.doubleTap,
-            chipValue: _getDoubleTapActionLabel(doubleTapAction),
+            chipValue: _getButtonActionLabel(doubleTapAction),
             onTap: _showDoubleTapActionSheet,
+          ),
+          // Triple Tap
+          _buildProfileStyleItem(
+            icon: FontAwesomeIcons.handPointer,
+            title: context.l10n.tripleTap,
+            chipValue: _getButtonActionLabel(tripleTapAction),
+            onTap: _showTripleTapActionSheet,
           ),
           // LED Brightness
           if (_isDimRatioLoaded && _hasDimmingFeature == true) ...[

@@ -4,8 +4,14 @@ import 'package:flutter/foundation.dart';
 
 import 'package:omi/backend/preferences.dart';
 import 'package:omi/backend/schema/transcript_segment.dart';
+import 'package:omi/services/capture/button_actions.dart';
 
-enum PowerCycleSubState { waitingForOff, deviceOff, waitingForReconnect, reconnected }
+enum PowerCycleSubState {
+  waitingForOff,
+  deviceOff,
+  waitingForReconnect,
+  reconnected,
+}
 
 class DeviceOnboardingProvider extends ChangeNotifier {
   static const int totalSteps = 4;
@@ -80,7 +86,11 @@ class DeviceOnboardingProvider extends ChangeNotifier {
     demoSegments = segments;
     int count = 0;
     for (final seg in segments) {
-      count += seg.text.trim().split(RegExp(r'\s+')).where((w) => w.isNotEmpty).length;
+      count += seg.text
+          .trim()
+          .split(RegExp(r'\s+'))
+          .where((w) => w.isNotEmpty)
+          .length;
     }
     wordCount = count;
 
@@ -147,7 +157,8 @@ class DeviceOnboardingProvider extends ChangeNotifier {
 
   void onDeviceReconnected() {
     if (currentStep != 2) return;
-    if (powerCycleState == PowerCycleSubState.waitingForReconnect || powerCycleState == PowerCycleSubState.deviceOff) {
+    if (powerCycleState == PowerCycleSubState.waitingForReconnect ||
+        powerCycleState == PowerCycleSubState.deviceOff) {
       powerCycleState = PowerCycleSubState.reconnected;
       notifyListeners();
     }
@@ -181,7 +192,9 @@ class DeviceOnboardingProvider extends ChangeNotifier {
     showSingleTapHint = false;
     doublePressCount++;
     // Save the selected action
-    SharedPreferencesUtil().doubleTapAction = selectedDoubleTapAction;
+    SharedPreferencesUtil().doubleTapAction = ButtonAction.fromId(
+      selectedDoubleTapAction,
+    );
     notifyListeners();
   }
 

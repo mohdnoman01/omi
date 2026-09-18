@@ -3292,5 +3292,9 @@
     "speechToTextUnavailableDesc": "Преобразование речи в текст сейчас недоступно. Проверьте подключение к интернету и настройки распознавания речи на устройстве, затем попробуйте ещё раз.",
     "memoryHistoryPartial": "Часть истории воспоминаний недоступна. Показана история, полученная на данный момент.",
     "tapPlusToStartRecording": "Нажмите +, чтобы начать запись",
-    "processingTakingLonger": "Ещё обрабатывается — это занимает больше обычного."
+    "processingTakingLonger": "Ещё обрабатывается — это занимает больше обычного.",
+    "singleTapAction": "Single Tap Action",
+    "tripleTapAction": "Triple Tap Action",
+    "singleTap": "Single Tap",
+    "tripleTap": "Triple Tap"
 }

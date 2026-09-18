@@ -3258,5 +3258,9 @@
     "speechToTextUnavailableDesc": "La transcripción de voz no está disponible en este momento. Comprueba tu conexión a Internet y los ajustes de reconocimiento de voz de tu dispositivo e inténtalo de nuevo.",
     "memoryHistoryPartial": "Parte del historial de recuerdos no está disponible. Se muestra el historial recibido hasta ahora.",
     "tapPlusToStartRecording": "Toca + para empezar a grabar",
-    "processingTakingLonger": "Sigue trabajando: esto está tardando más de lo habitual."
+    "processingTakingLonger": "Sigue trabajando: esto está tardando más de lo habitual.",
+    "singleTapAction": "Single Tap Action",
+    "tripleTapAction": "Triple Tap Action",
+    "singleTap": "Single Tap",
+    "tripleTap": "Triple Tap"
 }
