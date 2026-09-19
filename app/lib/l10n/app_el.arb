@@ -3257,5 +3257,9 @@
     "speechToTextUnavailableDesc": "Η μετατροπή ομιλίας σε κείμενο δεν είναι διαθέσιμη αυτή τη στιγμή. Ελέγξτε τη σύνδεσή σας στο διαδίκτυο και τις ρυθμίσεις αναγνώρισης ομιλίας της συσκευής σας και δοκιμάστε ξανά.",
     "memoryHistoryPartial": "Ένα μέρος του ιστορικού αναμνήσεων δεν είναι διαθέσιμο. Εμφανίζεται το ιστορικό που έχει ληφθεί μέχρι τώρα.",
     "tapPlusToStartRecording": "Πατήστε + για να ξεκινήσετε την εγγραφή",
-    "processingTakingLonger": "Ακόμα σε εξέλιξη — χρειάζεται περισσότερο χρόνο από το συνηθισμένο."
+    "processingTakingLonger": "Ακόμα σε εξέλιξη — χρειάζεται περισσότερο χρόνο από το συνηθισμένο.",
+    "singleTapAction": "Single Tap Action",
+    "tripleTapAction": "Triple Tap Action",
+    "singleTap": "Single Tap",
+    "tripleTap": "Triple Tap"
 }

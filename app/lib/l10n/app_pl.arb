@@ -3292,5 +3292,9 @@
     "speechToTextUnavailableDesc": "Zamiana mowy na tekst jest teraz niedostępna. Sprawdź połączenie internetowe i ustawienia rozpoznawania mowy na urządzeniu, a następnie spróbuj ponownie.",
     "memoryHistoryPartial": "Część historii wspomnień jest niedostępna. Wyświetlana jest dotychczas otrzymana historia.",
     "tapPlusToStartRecording": "Dotknij +, aby rozpocząć nagrywanie",
-    "processingTakingLonger": "Nadal działa — trwa to dłużej niż zwykle."
+    "processingTakingLonger": "Nadal działa — trwa to dłużej niż zwykle.",
+    "singleTapAction": "Single Tap Action",
+    "tripleTapAction": "Triple Tap Action",
+    "singleTap": "Single Tap",
+    "tripleTap": "Triple Tap"
 }
