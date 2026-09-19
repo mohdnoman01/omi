@@ -1037,7 +1037,12 @@ class CaptureController extends ChangeNotifier
         if (buttonState == 1) {
           Logger.debug("Single tap detected");
 
-          handleButtonAction(SharedPreferencesUtil().singleTapAction);
+          handleButtonAction(
+            deviceOnboardingProvider?.isOnboardingActive == true &&
+                    deviceOnboardingProvider?.currentStep == 1
+                ? ButtonAction.askQuestion
+                : SharedPreferencesUtil().singleTapAction,
+          );
           return;
         }
 
